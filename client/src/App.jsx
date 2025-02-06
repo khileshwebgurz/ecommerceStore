@@ -11,13 +11,16 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Admin from "./components/Admin";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { useState } from "react";
 
 function App() {
+  const [searchQuery, setSearchQuery] = useState('')
+
   return (
     <Router>
-      <Navb />
+      <Navb setSearchQuery={setSearchQuery} />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home searchedItem={searchQuery}/>} />
         <Route
           path="/cart"
           element={

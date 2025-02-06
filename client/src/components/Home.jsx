@@ -5,14 +5,12 @@ import Banner from "./Banner";
 import PriceFilter from "./PriceFilter";
 import ProductCards from "./ProductCards";
 import Paginations from "./Paginations";
-import '../App.css'
-const Home = () => {
+import "../App.css";
+const Home = ({searchedItem}) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
 
-  
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
@@ -22,8 +20,9 @@ const Home = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
+        
         const response = await axios.get(
-          `http://localhost:5000/api/products?page=${currentPage}&limit=9`
+          `http://localhost:5000/api/products?page=${currentPage}&search=${searchedItem}`
         );
         setProducts(response.data.products);
         setTotalPages(response.data.totalPages);
@@ -36,7 +35,7 @@ const Home = () => {
     };
 
     fetchProducts();
-  }, [currentPage]);
+  }, [currentPage,searchedItem]);
 
   if (error) {
     return <p>{error}</p>;
@@ -50,15 +49,24 @@ const Home = () => {
     setCurrentPage(page);
   };
 
-
-
   return (
     <>
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px" }}></div>
+      <div
+        style={{ maxWidth: "1200px", margin: "0 auto",  }}
+      ></div>
       <Banner />
       <PriceFilter sortProduct={handleSortProduct} />
       {loading ? (
-        <p style={{ textAlign: "center", fontSize: "18px", fontWeight: "bold", margin: "20px 0" }}>Loading products...</p>
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: "18px",
+            fontWeight: "bold",
+            margin: "20px 0",
+          }}
+        >
+          Loading products...
+        </p>
       ) : (
         <ProductCards products={products} />
       )}

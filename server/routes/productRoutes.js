@@ -1,23 +1,23 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Product = require('../models/Product');
+const Product = require("../models/Product");
 
 // GET all products
-router.get('/products', async (req, res) => {
+router.get("/products", async (req, res) => {
   try {
-    const { page = 1, limit = 8} = req.query;
+    
+    const { page = 1, limit = 9, search = "" } = req.query;
 
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
 
-
+    const query = search ? { title: { $regex: `.*${search}.*`, $options: "i" } } : {}; // Case-insensitive search
    
 
-    const products = await Product.find({})
-      .skip((pageNumber - 1) * limitNumber)
-      .limit(limitNumber);
+    const products = await Product.find(query).skip((pageNumber - 1) * limitNumber).limit(limitNumber);
+   
 
-    const totalProducts = await Product.countDocuments({});
+    const totalProducts = await Product.countDocuments(query);
 
     res.json({
       products,
@@ -25,10 +25,8 @@ router.get('/products', async (req, res) => {
       currentPage: pageNumber,
     });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch products' });
+    res.status(500).json({ error: "Failed to fetch products" });
   }
 });
-
-
 
 module.exports = router;
