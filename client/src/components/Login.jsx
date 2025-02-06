@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { Container, Card, Form, Button } from "react-bootstrap";
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -41,35 +41,41 @@ const Login = () => {
   };
 
   return (
-    <>
-      <div className="container">
-        <h1>Login</h1>
-
-        {error && <p style={{ color: "red" }}>{error}</p>}
-
-        <form onSubmit={handleLogin}>
-          <label>Email</label>
-          <input
+    <Container className="d-flex justify-content-center align-items-center vh-100">
+    <Card className="shadow-lg p-4 border-0" style={{ maxWidth: "400px", width: "100%" }}>
+      <h2 className="text-center fw-bold mb-3">Login</h2>
+      {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+      <Form onSubmit={handleLogin}>
+        <Form.Group className="mb-3">
+          <Form.Label className="fw-bold">Email</Form.Label>
+          <Form.Control
             type="text"
             name="email"
             value={formData.email}
             required
             onChange={handleInputChange}
+            style={{ padding: "10px" }}
           />
+        </Form.Group>
 
-          <label>Password</label>
-          <input
+        <Form.Group className="mb-3">
+          <Form.Label className="fw-bold">Password</Form.Label>
+          <Form.Control
             type="password"
             name="password"
             required
             value={formData.password}
             onChange={handleInputChange}
+            style={{ padding: "10px" }}
           />
+        </Form.Group>
 
-          <button type="submit">Login</button>
-        </form>
-      </div>
-    </>
+        <Button type="submit" variant="dark" className="w-100 py-2">
+          Login
+        </Button>
+      </Form>
+    </Card>
+  </Container>
   );
 };
 
