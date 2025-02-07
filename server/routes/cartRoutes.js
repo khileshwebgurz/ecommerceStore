@@ -4,7 +4,7 @@ const Cart = require("../models/Cart");
 
 router.post("/", async (req, res) => {
   try {
-    const { title, price, thumbnail, description, quantity, _id,userId } = req.body;
+    const { title, price, thumbnail, quantity, _id,userId } = req.body;
     const ProductId = _id;
     const UserId = userId;
  
@@ -21,7 +21,6 @@ router.post("/", async (req, res) => {
         title,
         price,
         thumbnail,
-        description,
         quantity,
         ProductId,
         UserId

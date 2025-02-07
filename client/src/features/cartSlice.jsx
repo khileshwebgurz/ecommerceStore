@@ -27,6 +27,9 @@ const cartSlice = createSlice({
 
 export const { setCart, setAddresses, setUsers } = cartSlice.actions;
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 2nd here it will fetch the data from db and set the redux state with the items from the db through setCart reducer.
 export const fetchCartFromDB = () => async (dispatch) => {
   try {
@@ -42,49 +45,6 @@ export const fetchCartFromDB = () => async (dispatch) => {
     console.error("Error fetching cart:", error);
   }
 };
-
-// fetching user from db
-export const fetchUserFromDB = () => async (dispatch) => {
-  try {
-    const response = await axios.get("http://localhost:5000/users");
-    dispatch(setUsers(response.data.users));
-  } catch (error) {
-    console.error("User not found");
-  }
-};
-
-// Fetch addresses from DB
-export const fetchAddressesFromDB = () => async (dispatch) => {
-  try {
-    const response = await axios.get("http://localhost:5000/address");
-    dispatch(setAddresses(response.data.addresses));
-  } catch (error) {
-    console.error("Error fetching addresses:", error);
-  }
-};
-
-// add user to db and sync state
-export const addUserAndSync = (user) => async (dispatch) => {
-  try {
-    await axios.post("http://localhost:5000/users/signup", user);
-    dispatch(fetchUserFromDB());
-  } catch (error) {
-    console.error("Error loading user from DB.", error);
-  }
-};
-
-// Add address to DB and sync state
-export const addAddressAndSync = (address) => async (dispatch) => {
-  try {
-    const token = sessionStorage.getItem("token");
-    const userId = token ? JSON.parse(atob(token.split(".")[1])).id : null;
-    await axios.post("http://localhost:5000/address", { ...address, userId });
-    dispatch(fetchAddressesFromDB());
-  } catch (error) {
-    console.error("Error adding address:", error);
-  }
-};
-
 // starting here when someone clicks addtoCart from Homepage, the item gets added to db and also dispatch fetchCartFromDb function
 export const addToCartAndSync = (product) => async (dispatch) => {
   try {
@@ -103,7 +63,6 @@ export const addToCartAndSync = (product) => async (dispatch) => {
     console.error("Error saving to cart:", error);
   }
 };
-
 // 3rd when i move to /cart page and clicks the Remove Item then this function is exceuted by deleting the item from db based on id and
 // update the redux state based on the db
 export const removeFromCartAndSync = (id) => async (dispatch) => {
@@ -114,7 +73,6 @@ export const removeFromCartAndSync = (id) => async (dispatch) => {
     console.error("Error removing cart item:", error);
   }
 };
-
 // this is for updating the quantity of the product
 export const updateCartQuantity = (id, quantity) => async (dispatch) => {
   try {
@@ -126,5 +84,74 @@ export const updateCartQuantity = (id, quantity) => async (dispatch) => {
     console.error("Error updating cart quantity:", error);
   }
 };
+
+
+
+
+// Add product to db and sync its state to show it in home page
+export const addToProduct = async(product)=>{
+  try {
+    await axios.post('http://localhost:5000/api/products',{product});
+  } catch (error) {
+    console.error('Post not added to DB')
+  }
+}
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////
+// fetching user from db
+export const fetchUserFromDB = () => async (dispatch) => {
+  try {
+    const response = await axios.get("http://localhost:5000/users");
+    dispatch(setUsers(response.data.users));
+  } catch (error) {
+    console.error("User not found");
+  }
+};
+// add user to db and sync state
+export const addUserAndSync = (user) => async (dispatch) => {
+  try {
+    await axios.post("http://localhost:5000/users/signup", user);
+    dispatch(fetchUserFromDB());
+  } catch (error) {
+    console.error("Error loading user from DB.", error);
+  }
+};
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////
+// Fetch addresses from DB
+export const fetchAddressesFromDB = () => async (dispatch) => {
+  try {
+    const response = await axios.get("http://localhost:5000/address");
+    dispatch(setAddresses(response.data.addresses));
+  } catch (error) {
+    console.error("Error fetching addresses:", error);
+  }
+};
+// Add address to DB and sync state
+export const addAddressAndSync = (address) => async (dispatch) => {
+  try {
+    const token = sessionStorage.getItem("token");
+    const userId = token ? JSON.parse(atob(token.split(".")[1])).id : null;
+    await axios.post("http://localhost:5000/address", { ...address, userId });
+    dispatch(fetchAddressesFromDB());
+  } catch (error) {
+    console.error("Error adding address:", error);
+  }
+};
+
+
+
+
+
+
+
 
 export default cartSlice.reducer;

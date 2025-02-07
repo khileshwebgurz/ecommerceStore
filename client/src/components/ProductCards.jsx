@@ -13,13 +13,21 @@ import { addToCartAndSync } from "../features/cartSlice";
 function ProductCards({ products }) {
   const dispatch = useDispatch();
 
-  const handleAddToCart = async (product) => {
-    try {
-      toast.success("Item added to cart", {
-        position: "bottom-right",
-      });
+  const dataIs = sessionStorage.getItem('token')
 
-      dispatch(addToCartAndSync(product));
+
+  const handleAddToCart = async (e, product) => {
+    try {
+      if(dataIs){
+        dispatch(addToCartAndSync(product));
+        toast.success("Item added to cart", {
+          position: "bottom-right",
+        });
+      }else{
+        e.preventDefault();
+      }
+
+      
     } catch (error) {
       console.error("Failed to save product:", error);
     }
@@ -69,7 +77,7 @@ function ProductCards({ products }) {
 
                 <Button
                   variant="primary"
-                  onClick={() => handleAddToCart(product)}
+                  onClick={(e) => handleAddToCart(e ,product)}
                   style={{
                     width: "100%",
                     backgroundColor: "#ff6f61",

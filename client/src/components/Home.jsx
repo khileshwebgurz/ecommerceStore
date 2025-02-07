@@ -14,6 +14,12 @@ const Home = ({searchedItem}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const [sortOrder, setSortOrder] = useState(""); 
+
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset to page 1 when search changes
+  }, [searchedItem]);
 
   // Fetch products
   useEffect(() => {
@@ -22,7 +28,7 @@ const Home = ({searchedItem}) => {
       try {
         
         const response = await axios.get(
-          `http://localhost:5000/api/products?page=${currentPage}&search=${searchedItem}`
+          `http://localhost:5000/api/products?page=${currentPage}&search=${searchedItem}&sort=${sortOrder}`
         );
         setProducts(response.data.products);
         setTotalPages(response.data.totalPages);
@@ -35,15 +41,12 @@ const Home = ({searchedItem}) => {
     };
 
     fetchProducts();
-  }, [currentPage,searchedItem]);
+  }, [currentPage,searchedItem,sortOrder]);
 
   if (error) {
     return <p>{error}</p>;
   }
 
-  const handleSortProduct = (newSortedProducts) => {
-    setProducts(newSortedProducts);
-  };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -55,7 +58,7 @@ const Home = ({searchedItem}) => {
         style={{ maxWidth: "1200px", margin: "0 auto",  }}
       ></div>
       <Banner />
-      <PriceFilter sortProduct={handleSortProduct} />
+      <PriceFilter setSortOrder={setSortOrder} />
       {loading ? (
         <p
           style={{

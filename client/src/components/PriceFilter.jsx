@@ -1,36 +1,25 @@
-import Dropdown from 'react-bootstrap/Dropdown';
-import { useState } from 'react';
-
-function PriceFilter({ sortProduct }) {
-  const [selectedPrice, setSelectedPrice] = useState('');
- 
+import Dropdown from "react-bootstrap/Dropdown";
 
 
-
-  const handleLowToHigh = () => {
-    setSelectedPrice('Low');
-    sortProduct((prevProducts) =>
-      [...prevProducts].sort((a, b) => a.price - b.price)
-    );
-  };
-
-  const handleHighToLow = () => {
-    setSelectedPrice('High');
-    sortProduct((prevProducts) =>
-      [...prevProducts].sort((a, b) => b.price - a.price)
-    );
-  };
+function PriceFilter({ setSortOrder }) {
 
   return (
-    <div style={{ display: "flex", justifyContent: "flex-end", padding: "10px 20px", marginBottom: "20px" }}>
-
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "flex-end",
+        padding: "10px 20px",
+        marginBottom: "20px",
+      }}
+    >
       <Dropdown>
         <Dropdown.Toggle
           as="input"
           variant="success"
           id="dropdown-basic"
           readOnly
-          value={selectedPrice || 'Sort by Price'}
+          // value={selectedPrice || 'Sort by Price'}
+          value="Sort by Price"
           style={{
             width: "200px",
             padding: "10px",
@@ -43,8 +32,12 @@ function PriceFilter({ sortProduct }) {
         />
 
         <Dropdown.Menu>
-          <Dropdown.Item onClick={handleLowToHigh}>Price Low to High</Dropdown.Item>
-          <Dropdown.Item onClick={handleHighToLow}>Price High to Low</Dropdown.Item>
+          <Dropdown.Item onClick={() => setSortOrder("lowToHigh")}>
+            Price Low to High
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => setSortOrder("highToLow")}>
+            Price High to Low
+          </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     </div>
@@ -52,4 +45,3 @@ function PriceFilter({ sortProduct }) {
 }
 
 export default PriceFilter;
-
